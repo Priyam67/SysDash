@@ -5,6 +5,47 @@ A terminal-based system monitoring dashboard built with Python, Textual, and Rus
 
 SysDash combines a live system overview with a dedicated Apple Silicon hardware telemetry screen, bringing resource monitoring and low-level hardware measurements into a single terminal interface.
 
+## Architecture
+
+SysDash uses a hybrid Python–Rust architecture that separates the terminal user interface from system-level metric collection.
+
+### System Overview
+
+```mermaid
+flowchart TD
+    A[User] <--> B[Python Textual Dashboard]
+    B --> C[Background Reader Thread]
+    C <--> D[Bounded Queue]
+    B --> E[Hardware Telemetry Screen]
+    B <--> F[Rust Metrics Engine]
+    F --> G[sysinfo]
+    F --> H[macOS System Utilities]
+    F --> I[JSON Snapshots]
+    I --> C
+    E --> J[powermetrics]
+```
+
+### Components
+
+- **Python UI (`main.py`)** — Renders the interactive terminal dashboard using Textual and Rich, processes user input, and displays system metrics.
+- **Rust Metrics Engine (`engine/rust-engine/`)** — Collects system statistics using Rust and `sysinfo`, including CPU utilization, memory, swap, disk I/O, network throughput, process information, and system uptime.
+- **Process Communication** — The Python application launches the Rust engine as a subprocess. The engine streams JSON snapshots through standard output, which a background reader thread consumes and places in a bounded queue. The UI periodically retrieves the latest snapshot to refresh the dashboard.
+- **Hardware Telemetry (`hardware_telemetry.py`)** — Provides a dedicated screen for hardware power and thermal telemetry. It uses macOS-specific utilities, including `powermetrics`, for metrics supported by the host system.
+- **macOS Integration** — Additional system information, such as battery status, thermal status, and memory pressure, is collected through macOS utilities where supported.
+
+### Data Flow
+
+1. The Python application starts the Rust metrics engine.
+2. The Rust engine collects system statistics and serializes them as JSON.
+3. A background thread reads the JSON stream and places snapshots in a bounded queue.
+4. The Textual UI consumes the latest available snapshot and updates the dashboard.
+5. The hardware telemetry screen uses its dedicated collection mechanism for supported power and thermal metrics.
+
+### Design Rationale
+
+The separation between the UI and metrics engine keeps presentation logic independent of system monitoring. Rust handles metric collection, while Python and Textual provide a flexible interface for rendering and interacting with the data. JSON-based subprocess communication keeps the components loosely coupled.
+
+
 ## Features
 
 ### System Dashboard
