@@ -8,7 +8,7 @@ from pathlib import Path
 
 from rich.markup import escape
 from textual.app import App, ComposeResult
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.widgets import Header, Footer, Static, Input, DataTable, Button
 
 from hardware_telemetry import HardwareTelemetryScreen
@@ -129,9 +129,18 @@ class SysDash(App):
     }
 
     #cpu {
-        border: round #89b4fa;
+    border: none;
+    height: auto;
+    min-height: 1;
     }
 
+    #cpu-scroll {
+    width: 1fr;
+    height: 100%;
+    min-height: 0;
+    border: round #89b4fa;
+    overflow-y: auto;
+    }
     #memory {
         border: round #a6e3a1;
     }
@@ -232,18 +241,21 @@ class SysDash(App):
         )
 
         yield Horizontal(
-            Static(
-                "Connecting to Rust engine...",
-                id="cpu",
-                classes="panel",
-            ),
-            Static(
-                "Loading memory...",
-                id="memory",
-                classes="panel",
-            ),
-            id="top",
-        )
+    VerticalScroll(
+        Static(
+            "Connecting to Rust engine...",
+            id="cpu",
+            classes="panel",
+        ),
+        id="cpu-scroll",
+    ),
+    Static(
+        "Loading memory...",
+        id="memory",
+        classes="panel",
+    ),
+    id="top",
+)
 
         yield Horizontal(
             Static(
