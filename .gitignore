@@ -1,0 +1,46 @@
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Rust build output
+target/
+engine/rust-engine/target/
+
+# macOS
+.DS_Store
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Editor and local files
+.vscode/
+.idea/
+
+# Logs and temporary files
+*.log
+*.tmp
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*~
+*_backup.py
+*_backup.rs
+# Backup files
+*.stage3-backup
+*.stage4-backup
+*_backup.py
+*_backup.rs
+*.bak
+*.backup
+*.old
+*.orig
+*~
+# Local machine-specific Rust configuration
+engine/rust-engine/.cargo/config.toml
