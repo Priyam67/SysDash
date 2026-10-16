@@ -93,11 +93,10 @@ Some hardware telemetry features require administrator privileges.
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/sysdash.git
+git clone https://github.com/Priyam67/sysdash.git
 cd sysdash
 ```
 
-Replace `YOUR_USERNAME` with your GitHub username.
 
 ### 2. Create a Python virtual environment
 
@@ -159,6 +158,4 @@ Hardware telemetry is handled separately through macOS utilities.
 - Hardware power readings do not necessarily represent total battery or wall power consumption.
 - Metrics unavailable from the operating system are not guaranteed to appear.
 
-## License
 
-This project is currently unlicensed. Add a license before allowing others to reuse or redistribute the code.
